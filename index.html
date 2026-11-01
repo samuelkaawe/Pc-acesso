@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0f1115">
+<title>RemotePC</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div id="gate" class="overlay hidden">
+  <div class="card">
+    <h2>RemotePC</h2>
+    <p>Digite o PIN mostrado na janela do servidor no PC.</p>
+    <input id="pinInput" type="tel" inputmode="numeric" maxlength="12" placeholder="PIN" autocomplete="off">
+    <button id="pinBtn" class="primary">Entrar</button>
+    <p id="gateMsg" class="err"></p>
+  </div>
+</div>
+
+<header id="topbar">
+  <span id="dot" class="dot"></span><span id="title">RemotePC</span>
+  <span class="spacer"></span>
+  <button id="btnFs" class="icon">⛶</button>
+  <button id="btnExit" class="icon">⏏</button>
+</header>
+
+<main>
+  <section id="tab-screen" class="tab active">
+    <div id="screenHost" class="screenHost"><img id="screenImg" alt="" draggable="false"></div>
+    <div class="bar">
+      <button id="btnMode">Touchpad</button>
+      <button class="hold" data-b="left">Esq.</button>
+      <button class="hold" data-b="right">Dir.</button>
+      <button id="btnKb">⌨</button>
+    </div>
+    <div id="kbPanel" class="panel hidden">
+      <div class="row"><input id="kbText" placeholder="Digite e envie ao PC"><button id="kbSend">Enviar</button><button id="kbEnter">↵</button></div>
+      <div id="kbKeys"></div>
+    </div>
+  </section>
+
+  <section id="tab-shortcuts" class="tab">
+    <div class="bar"><b class="grow">Atalhos</b><button id="scEditBtn">✏️ Editar</button><button id="scAdd" class="hidden">＋</button></div>
+    <div id="scGrid" class="grid scroll"></div>
+  </section>
+
+  <section id="tab-files" class="tab">
+    <div class="bar">
+      <button id="fsUp">⬆</button><button id="fsRoot">💽</button><button id="fsNew">📁＋</button><button id="fsUpload">📤</button>
+    </div>
+    <div id="fsPath" class="path"></div>
+    <div id="fsList" class="scroll"></div>
+    <input id="fsFile" type="file" multiple class="hidden">
+  </section>
+
+  <section id="tab-cam" class="tab">
+    <div class="scroll">
+      <h3>Celular como webcam</h3>
+      <p class="mut">O vídeo vai para o PC e aparece como a câmera virtual "OBS Virtual Camera". Mantenha o app aberto e a tela ligada.</p>
+      <div class="col">
+        <label class="fld"><span>Câmera</span><select id="camFacing"><option value="back">Traseira</option><option value="front">Frontal</option></select></label>
+        <label class="fld"><span>Resolução</span><select id="camRes"><option>640x480</option><option>1280x720</option><option>1920x1080</option></select></label>
+        <label class="fld"><span>FPS</span><select id="camFps"><option>15</option><option>24</option><option>30</option></select></label>
+        <label class="fld"><span>Qualidade JPEG</span><input id="camQ" type="range" min="40" max="95"></label>
+        <button id="camStart" class="primary">Iniciar webcam</button>
+        <p id="camStatus" class="mut"></p>
+        <p id="camWarn" class="err"></p>
+      </div>
+    </div>
+  </section>
+
+  <section id="tab-more" class="tab">
+    <div class="scroll">
+      <div class="sect"><h3>Energia do PC</h3>
+        <div class="grid3">
+          <button data-pw="lock">🔒 Bloquear</button><button data-pw="sleep">😴 Suspender</button>
+          <button data-pw="shutdown">⏻ Desligar</button><button data-pw="restart">🔄 Reiniciar</button>
+          <button data-pw="cancel">✖ Cancelar</button>
+        </div>
+        <p class="mut">Desligar/reiniciar esperam 30 s (dá tempo de cancelar).</p>
+      </div>
+      <div class="sect"><h3>Mídia</h3>
+        <div class="grid3">
+          <button data-k="prev">⏮</button><button data-k="playpause">⏯</button><button data-k="next">⏭</button>
+          <button data-k="voldown">🔉</button><button data-k="mute">🔇</button><button data-k="volup">🔊</button>
+        </div>
+      </div>
+      <div class="sect"><h3>Tela</h3>
+        <label class="fld"><span>Monitor</span><select id="optMon"></select></label>
+        <label class="fld"><span>Qualidade <b id="vQ"></b></span><input id="optQ" type="range" min="20" max="90"></label>
+        <label class="fld"><span>Tamanho <b id="vScale"></b></span><input id="optScale" type="range" min="25" max="100"></label>
+        <label class="fld"><span>FPS <b id="vFps"></b></span><input id="optFps" type="range" min="5" max="60"></label>
+        <label class="fld"><span>Sensibilidade do touchpad <b id="vSens"></b></span><input id="optSens" type="range" min="5" max="40"></label>
+      </div>
+      <div class="sect"><h3>Servidor</h3>
+        <div id="srvInfo" class="mut"></div>
+        <button id="btnLogout">Trocar PIN</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<nav id="tabs">
+  <button data-tab="screen" class="active">🖥<small>Tela</small></button>
+  <button data-tab="pad">🎮<small>Jogar</small></button>
+  <button data-tab="shortcuts">⚡<small>Atalhos</small></button>
+  <button data-tab="files">📁<small>Arquivos</small></button>
+  <button data-tab="cam">📷<small>Webcam</small></button>
+  <button data-tab="more">⋯<small>Mais</small></button>
+</nav>
+
+<div id="pad" class="hidden">
+  <div id="padScreenHost"></div>
+  <div id="padControls"></div>
+  <div id="padTop">
+    <button id="padExit">✕</button><button id="padModeBtn">🎡</button><button id="padBgBtn">🖥</button>
+    <button id="padEditBtn">✏️</button><button id="padCfgBtn">⚙</button>
+  </div>
+  <div id="padEditBar" class="hidden">
+    <span id="peName">Toque num controle</span>
+    <input id="peSize" type="range" min="30" max="260">
+    <button id="peHide">Ocultar</button><button id="peReset">Resetar</button><button id="peDone" class="primary">Concluir</button>
+  </div>
+</div>
+
+<div id="modal" class="overlay hidden"><div class="card" id="modalBody"></div></div>
+<div id="toast"></div>
+<script src="/static/app.js"></script>
+</body>
+</html>
